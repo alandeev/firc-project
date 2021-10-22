@@ -12,7 +12,6 @@
 
 
 ## Documentation
-___
 
 ### Create Contact
 > [ POST ] http://localhost:8080/contacts
