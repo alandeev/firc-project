@@ -11,60 +11,60 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.minidev.json.JSONObject;
 
-import com.alan.crud.entities.Contact;
+import com.alan.crud.entities.Employee;
 import com.alan.crud.repositories.*;
 
 @RestController
-@RequestMapping(path = "/contacts")
-public class ContactController {
+@RequestMapping(path = "/employees")
+public class EmployeeController {
 
   @Autowired
-  ContactRepository contactRepository;
+  EmployeeRepository employeeRepository;
 
   @GetMapping
-  public Iterable<Contact> list() {
-    return contactRepository.findAll();
+  public Iterable<Employee> list() {
+    return employeeRepository.findAll();
   }
 
   @PostMapping
-  public Contact save(@RequestBody Contact contact) {
-    contactRepository.save(contact);
-    return contact;
+  public Employee save(@RequestBody Employee employee) {
+    employeeRepository.save(employee);
+    return employee;
   }
 
   @GetMapping(path="{id}")
   public Object get(@PathVariable Long id) {
-    var contact = contactRepository.findById(id);
+    var employee = employeeRepository.findById(id);
 
     JSONObject response = new JSONObject();
 
-    if(contact.isEmpty()) {
+    if(employee.isEmpty()) {
       response.put("status", "error");
       response.put("message", "id not found");
       return response;
     }
 
     response.put("status", "success");
-    response.put("data", contact);
+    response.put("data", employee);
 
     return response;
   }
 
   @DeleteMapping(path="{id}")
   public Object delete(@PathVariable Long id) {
-    var contact = contactRepository.findById(id);
+    var employee = employeeRepository.findById(id);
 
     JSONObject response = new JSONObject();
-    if(contact.isEmpty()) {
+    if(employee.isEmpty()) {
       response.put("status", "error");
       response.put("message", "id not found");
       return response;
     }
 
-    contactRepository.deleteById(id);
+    employeeRepository.deleteById(id);
 
     response.put("status", "success");
-    response.put("message", "contact removed with success");
+    response.put("message", "employee removed with success");
     return response;
   }
 }
