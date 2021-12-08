@@ -35,18 +35,15 @@ public class TrainingController {
   public Object get(@PathVariable Long id) {
     var training = trainingRepository.findById(id);
 
-    JSONObject response = new JSONObject();
-
     if(training.isEmpty()) {
+      JSONObject response = new JSONObject();
+
       response.put("status", "error");
       response.put("message", "id not found");
       return response;
     }
 
-    response.put("status", "success");
-    response.put("data", training);
-
-    return response;
+    return training;
   }
 
   // FALTA FAZER
@@ -56,7 +53,6 @@ public class TrainingController {
   @DeleteMapping(path="{id}")
   public Object delete(@PathVariable Long id) {
     var training = trainingRepository.findById(id);
-
     JSONObject response = new JSONObject();
     if(training.isEmpty()) {
       response.put("status", "error");

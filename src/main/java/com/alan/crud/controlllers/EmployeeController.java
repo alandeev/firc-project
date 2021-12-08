@@ -12,14 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import net.minidev.json.JSONObject;
 
 import com.alan.crud.entities.Employee;
+import com.alan.crud.entities.Training;
 import com.alan.crud.repositories.*;
 
 @RestController
 @RequestMapping(path = "/employees")
 public class EmployeeController {
-
   @Autowired
   EmployeeRepository employeeRepository;
+  @Autowired
+  TrainingRepository trainingRepository;
 
   @GetMapping
   public Iterable<Employee> list() {
@@ -27,9 +29,19 @@ public class EmployeeController {
   }
 
   @PostMapping
-  public Employee save(@RequestBody Employee employee) {
-    employeeRepository.save(employee);
-    return employee;
+  public Object save(@RequestBody Employee model) {
+    var optionalTraining = trainingRepository.findById(model.trainingId);
+    if(optionalTraining.isEmpty()) {
+      JSONObject response = new JSONObject();
+
+      response.put("status", "error");
+      response.put("message", "training not found");
+      return response;      
+    }
+
+    employeeRepository.save(model);
+
+    return model;
   }
 
   @GetMapping(path="{id}")
