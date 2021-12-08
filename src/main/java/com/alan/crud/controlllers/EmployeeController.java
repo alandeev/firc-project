@@ -1,10 +1,12 @@
 package com.alan.crud.controlllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import net.minidev.json.JSONObject;
 
 import com.alan.crud.entities.Employee;
-import com.alan.crud.entities.Training;
 import com.alan.crud.repositories.*;
 
 @RestController
@@ -60,6 +61,18 @@ public class EmployeeController {
     response.put("data", employee);
 
     return response;
+  }
+
+  @PutMapping(path="{id}")
+  public Object update(@PathVariable long id, @RequestBody Employee model) {
+    return employeeRepository.findById(id).map(record -> {
+      record.matricula = model.matricula;
+      record.nome = model.nome;
+      record.sexo = model.sexo;
+
+      var updated = employeeRepository.save(record);
+      return ResponseEntity.ok().body(updated);
+    }).orElse(ResponseEntity.notFound().build());
   }
 
   @DeleteMapping(path="{id}")
